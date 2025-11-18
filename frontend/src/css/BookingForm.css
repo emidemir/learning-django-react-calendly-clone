@@ -1,0 +1,77 @@
+/* BookingForm.css */
+.booking-form-page {
+    display: flex;
+    max-width: 900px;
+    width: 100%;
+    margin-top: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.booking-summary-panel {
+    width: 35%;
+    padding: 30px;
+    background-color: #f7f9fc;
+    border-right: 1px solid #e0e0e0;
+}
+
+.summary-host {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.summary-event {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #007bff;
+}
+
+.summary-info p {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #444;
+    display: flex;
+    align-items: center;
+}
+
+.summary-info span {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.booking-form-panel {
+    width: 65%;
+    padding: 30px;
+}
+
+.form-title {
+    font-size: 22px;
+    margin-bottom: 25px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.textarea-field { /* Reused style from EventTypeEditor, adjusted padding */
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    min-height: 80px;
+    box-sizing: border-box;
+    resize: vertical;
+    margin-bottom: 20px;
+}
+
+.submission-error-message {
+    color: #dc3545;
+    font-weight: 500;
+    margin-bottom: 15px;
+}

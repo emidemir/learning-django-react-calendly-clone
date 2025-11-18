@@ -1,0 +1,31 @@
+/* IntegrationsSettings.css */
+.settings-page-container {
+    max-width: 800px;
+}
+
+.settings-page-container h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.settings-description {
+    color: #666;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.integration-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.placeholder-integration {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+    opacity: 0.7;
+    max-width: 600px;
+}

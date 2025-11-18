@@ -1,0 +1,50 @@
+/* TimeSlotGrid.css */
+.time-slot-grid-container {
+    padding: 15px;
+    height: 100%; /* Important for equal height in flex layout */
+}
+
+.time-grid-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.time-slot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 500px; /* Constrain height to make it scrollable */
+    overflow-y: auto;
+    padding-right: 10px; /* Space for scrollbar */
+}
+
+.time-slot-button {
+    background-color: white;
+    color: #007bff;
+    border: 1px solid #007bff;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+    text-align: center;
+}
+
+.time-slot-button:hover {
+    background-color: #f0f8ff;
+}
+
+.time-slot-button--selected {
+    background-color: #007bff;
+    color: white;
+    font-weight: 600;
+}
+
+.time-grid-placeholder, .no-slots-message {
+    color: #999;
+    padding: 20px;
+    text-align: center;
+    font-style: italic;
+}

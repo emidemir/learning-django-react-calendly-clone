@@ -1,0 +1,53 @@
+/* AvailabilityRule.css */
+.availability-rules-editor {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.rule-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.rule-row:last-child {
+    border-bottom: none;
+}
+
+.rule-toggle {
+    display: flex;
+    align-items: center;
+    width: 150px;
+    font-weight: 500;
+}
+
+.rule-toggle input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2); /* Make checkbox slightly larger */
+}
+
+.rule-time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-input {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.time-separator {
+    color: #666;
+}
+
+.unavailable-text {
+    color: #999;
+    font-style: italic;
+    padding: 8px 10px;
+}

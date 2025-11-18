@@ -1,0 +1,50 @@
+/* ScheduledEvents.css */
+.scheduled-events-manager h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.event-filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+}
+
+.filter-tab {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-bottom 0.2s;
+}
+
+.filter-tab:hover:not(.active) {
+    color: #007bff;
+}
+
+.filter-tab.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+    font-weight: 600;
+}
+
+.event-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.no-events-message {
+    padding: 30px;
+    background-color: #ffffff;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    text-align: center;
+    color: #999;
+}

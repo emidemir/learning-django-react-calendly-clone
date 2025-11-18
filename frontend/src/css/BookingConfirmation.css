@@ -1,0 +1,61 @@
+/* BookingConfirmation.css */
+.confirmation-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 50px;
+}
+
+.confirmation-box {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 550px;
+    width: 100%;
+    text-align: center;
+}
+
+.confirmation-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.confirmation-box h2 {
+    font-size: 32px;
+    color: #28a745; /* Green for success */
+    margin-bottom: 20px;
+}
+
+.confirmation-message {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.confirmation-details {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 6px;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.confirmation-details p {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.confirmation-details span {
+    font-weight: 600;
+    color: #007bff;
+    margin-right: 5px;
+    display: inline-block;
+    min-width: 60px;
+}
+
+.confirmation-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}

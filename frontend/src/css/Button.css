@@ -1,0 +1,66 @@
+/* Button.css - Basic Styles */
+.btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s, opacity 0.2s;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Primary Button */
+  .btn--primary {
+    background-color: #007bff; /* Example: Blue */
+    color: white;
+  }
+  .btn--primary:hover:not(.btn--disabled) {
+    background-color: #0056b3;
+  }
+  
+  /* Secondary Button (e.g., outline or text) */
+  .btn--secondary {
+    background-color: transparent;
+    color: #007bff;
+    border: 1px solid #007bff;
+  }
+  .btn--secondary:hover:not(.btn--disabled) {
+    background-color: #f0f8ff;
+  }
+  
+  /* Disabled State */
+  .btn--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  /* Sizes */
+  .btn--medium {
+    font-size: 16px;
+  }
+  .btn--large {
+    padding: 12px 24px;
+    font-size: 18px;
+  }
+  .btn--small {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  
+  /* Loading/Spinner Placeholder */
+  .btn__spinner {
+    /* In a real project, this would be a CSS animation for a spinner */
+    width: 16px;
+    height: 16px;
+    border: 2px solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }

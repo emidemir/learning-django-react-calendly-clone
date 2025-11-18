@@ -1,0 +1,27 @@
+/* Layout.css */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ----------------- Dashboard Layout ----------------- */
+.dashboard-layout {
+    display: flex;
+    flex: 1; /* Allows the content area to grow */
+}
+
+.dashboard-content {
+    flex-grow: 1; /* Takes up the remaining space */
+    padding: 20px 30px;
+    background-color: #f7f9fc; /* Light background for dashboard */
+}
+
+/* ----------------- Public Layout ----------------- */
+.public-content {
+    flex-grow: 1;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Start content at the top */
+}

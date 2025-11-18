@@ -1,0 +1,26 @@
+/* EventTypesManager.css */
+.event-manager-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.event-manager-header h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #333;
+}
+
+.event-list-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.event-list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Inherits activity-placeholder style from DashboardHome.css for consistency */

@@ -1,0 +1,38 @@
+/* InputField.css - Basic Styles */
+.input-group {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .input-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box; /* Important for full width */
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .input-field:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+  
+  .input-field--error {
+    border-color: #dc3545; /* Red border for errors */
+  }
+  
+  .input-error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+  }

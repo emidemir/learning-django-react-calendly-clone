@@ -9,6 +9,8 @@ backend/media/
 backend/staticfiles/
 backend/.env
 
+docs/ 
+
 # React ------------------------------------
 frontend/node_modules/
 frontend/build/

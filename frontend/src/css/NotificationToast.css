@@ -1,0 +1,52 @@
+/* NotificationToast.css - Basic Styles */
+.toast-container {
+    /* In the main App.css, you would define this container */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+  }
+  
+  .toast {
+    position: relative;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* Types */
+  .toast--info {
+    background-color: #17a2b8; /* Cyan */
+  }
+  .toast--success {
+    background-color: #28a745; /* Green */
+  }
+  .toast--error {
+    background-color: #dc3545; /* Red */
+  }
+  
+  /* Visibility */
+  .toast--visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .toast--hidden {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  
+  .toast-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 15px;
+    line-height: 1;
+  }

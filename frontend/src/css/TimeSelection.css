@@ -1,0 +1,67 @@
+/* TimeSelection.css */
+.time-selection-page {
+    display: flex;
+    max-width: 1000px;
+    width: 100%;
+    margin-top: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 600px; /* Ensure content area is tall enough */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.event-details-panel {
+    width: 35%;
+    padding: 30px;
+    background-color: #f7f9fc;
+    border-right: 1px solid #e0e0e0;
+}
+
+.host-name-small {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.event-name-large {
+    font-size: 28px;
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.event-info-list p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #444;
+}
+
+.event-info-list span {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.scheduling-panel {
+    width: 65%;
+    display: flex;
+}
+
+.date-selection-area {
+    width: 55%;
+    padding: 20px 10px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.time-selection-area {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+}
+
+.next-button-container {
+    padding: 10px 15px 0;
+    border-top: 1px solid #e0e0e0;
+    margin-top: auto; /* Pushes the button to the bottom */
+}

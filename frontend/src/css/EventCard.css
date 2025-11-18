@@ -1,0 +1,40 @@
+/* EventCard.css */
+.event-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    max-width: 400px;
+}
+
+.event-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.event-card-name {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.event-card-duration {
+    font-size: 14px;
+    color: #007bff;
+    font-weight: 600;
+}
+
+.event-card-description {
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+.event-card-footer {
+    display: flex;
+    justify-content: flex-end;
+}

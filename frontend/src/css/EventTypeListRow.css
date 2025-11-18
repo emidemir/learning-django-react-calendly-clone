@@ -1,0 +1,57 @@
+/* EventTypeListRow.css */
+.event-list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.event-list-row:last-child {
+    border-bottom: none;
+}
+
+.event-list-row--inactive {
+    opacity: 0.6;
+    background-color: #fafafa;
+}
+
+.event-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.event-status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #28a745; /* Green for Active */
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.event-list-row--inactive .event-status-indicator {
+    background-color: #6c757d; /* Gray for Inactive */
+}
+
+.event-info h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.event-duration {
+    margin-left: 20px;
+    padding: 2px 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #666;
+}
+
+.event-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
