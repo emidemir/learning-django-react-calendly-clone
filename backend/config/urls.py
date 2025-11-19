@@ -1,6 +1,6 @@
 # ===== DJANGO UTILITIES =====
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 # ===== MODULES FOR MEDIA URL =====
 from django.conf import settings
@@ -26,7 +26,8 @@ urlpatterns = [
     path('auth/oauth/', google_oauth, name='google-auth'),
     path('auth/logout/', logout, name='logout'),
 
-    #
+    # Router URLS
+    path('', include('config.routers')),
 
 ]
 

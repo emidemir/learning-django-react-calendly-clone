@@ -34,7 +34,7 @@ const LoginPage = () => {
         const data = await response.json()
 
         if (response.ok){
-            localStorage.setItem("user", data.user);
+            localStorage.setItem("user", JSON.stringify(data.user));
             localStorage.setItem("access_token", data.access);
             localStorage.setItem("refresh_token", data.refresh);
 

@@ -13,6 +13,8 @@ class ProfileViewset(viewsets.ModelViewSet):
     # IsOwner is redundant, but still a good practice to add in this case since the get_queryset is already overriden
     permission_classes = [IsAuthenticated, IsOwner]
 
+    lookup_field = 'user'
+
     # To prevent users sending POST request to create a new profile if they signed up
     http_method_names = ['get', 'put', 'patch', 'delete', 'head', 'options']
     

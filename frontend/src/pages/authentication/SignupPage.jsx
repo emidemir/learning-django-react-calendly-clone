@@ -62,10 +62,9 @@ const SignupPage = () => {
 		const data = await response.json();
 
 		if (response.ok){
+			localStorage.setItem("user", JSON.stringify(data.user));
 			localStorage.setItem("access_token", data.access);
-			localStorage.setItem("user", data.user);
-			localStorage.setItem("access_token", data.access);
-			localStorage.setItem("refresh_token", data.reffresh);
+			localStorage.setItem("refresh_token", data.refresh);
 
 			alert("Successfuly signed up!")
 
@@ -82,17 +81,17 @@ const SignupPage = () => {
 			<form onSubmit={handleSubmit}>
 			<InputField
 				label="Firstname"
-				name="firstname"
+				name="first_name"
 				type="text"
-				value={formData.firstname}
+				value={formData.first_name}
 				onChange={handleChange}
 				placeholder="e.g., your first name"
 			/>
 			<InputField
 				label="Lastname"
-				name="lastname"
+				name="last_name"
 				type="text"
-				value={formData.lastname}
+				value={formData.last_name}
 				onChange={handleChange}
 				placeholder="e.g., your last name"
 			/>

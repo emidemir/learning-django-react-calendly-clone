@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     bio = models.TextField(null=True, blank=True)
-    avatar = models.ImageField(upload_to=avatar_upload_path, default="default.jpg", blank=True)
+    avatar = models.ImageField(upload_to=avatar_upload_path, default="/avatars/default.jpg", blank=True)
 
     def save(self, *args, **kwargs):
         if not self.bio and self.user:

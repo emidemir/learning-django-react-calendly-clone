@@ -1,5 +1,5 @@
 // ProfileSettings.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout/Layout.jsx';
 import InputField from '../../components/core-ui/InputField.jsx';
 import Button from '../../components/core-ui/Button.jsx';
@@ -13,10 +13,42 @@ const mockProfile = {
 };
 
 const ProfileSettings = () => {
-    const [profile, setProfile] = useState(mockProfile);
+    const [profile, setProfile] = useState({});
     const [passwordData, setPasswordData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
     const [isSavingProfile, setIsSavingProfile] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
+    
+    const authToken = localStorage.getItem("access_token");
+    const userID = JSON.parse(localStorage.getItem("user")).id
+
+    useEffect(()=> {
+        const fetchProfileData = async () => {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profiles/${userID}/`,{
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${authToken}`,
+                }
+            });
+            
+            const data = await response.json();
+            console.log(data)
+            
+            if (response.ok){
+                setProfile({
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    username: data.username,
+                    email: data.email,
+                    profilePicture: `${process.env.REACT_APP_BACKEND_URL}${data.img_url}`
+                })
+                console.log(data)
+            }else{
+                alert("Something went wrong when fetching profile data: " + JSON.stringify(data))
+            }
+        };
+
+        fetchProfileData();
+    },[authToken, userID])
 
     const handleProfileChange = (e) => {
         setProfile({ ...profile, [e.target.name]: e.target.value });
@@ -26,14 +58,24 @@ const ProfileSettings = () => {
         setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
     };
 
-    const handleSaveProfile = (e) => {
+    const handleSaveProfile = async (e) => {
         e.preventDefault();
         setIsSavingProfile(true);
-        console.log('Saving Profile:', profile);
-        setTimeout(() => {
-            setIsSavingProfile(false);
-            alert('Profile updated successfully!');
-        }, 1500);
+        
+        const payload = {
+            ...profile,
+            
+        }
+
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profiles/${userID}`,{
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${authToken}`,
+            },
+            body: JSON.stringify()
+        })
+
     };
 
     const handleChangePassword = (e) => {
@@ -64,16 +106,16 @@ const ProfileSettings = () => {
                             <Button variant="secondary" size="small">Change Photo</Button>
                         </div>
                         <InputField
-                            label="Full Name"
-                            name="fullName"
-                            value={profile.fullName}
+                            label="First Name"
+                            name="first_name"
+                            value={profile.first_name}
                             onChange={handleProfileChange}
                             required
                         />
                         <InputField
-                            label="Profile URL Slug"
-                            name="username"
-                            value={profile.username}
+                            label="Last Name"
+                            name="last_name"
+                            value={profile.last_name}
                             onChange={handleProfileChange}
                             required
                         />

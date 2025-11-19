@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -193,6 +193,7 @@ def google_oauth(request):
         )
     
 @api_view(['POST'])
+@permission_classes([IsAuthenticated]) 
 def logout(request):
     """Logout by blacklisting the token"""
     try:
@@ -200,6 +201,9 @@ def logout(request):
         if refresh_token:
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response({'message': "Logout succesful"}, status=status.HTTP_200_OK)
-    except Exception:
+            return Response({'message': "Logout successful"}, status=status.HTTP_200_OK)
+        return Response({'error': 'Refresh token required'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
         return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
