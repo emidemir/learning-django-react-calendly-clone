@@ -2,43 +2,72 @@
 import React, { useState } from 'react';
 import InputField from '../../components/core-ui/InputField.jsx';
 import Button from '../../components/core-ui/Button.jsx';
-import { Link } from 'react-router-dom'; // Assuming you are using react-router-dom
+import { Link, useNavigate } from 'react-router-dom'; // Assuming you are using react-router-dom
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 import '../../css/AuthLayout.css';
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+    const navigate = useNavigate()
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    const [formData, setFormData] = useState({ email: '', password: '' });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-    
-    // Placeholder for API call: Will be replaced with Django backend call later
-    console.log('Attempting login with:', formData);
-    
-    setTimeout(() => {
-        // Simulate login success/failure
-        if (formData.email === 'test@user.com' && formData.password === 'password') {
-             console.log("Login successful!");
-             // Redirect to dashboard (DashboardHome.jsx route: /dashboard)
-        } else {
-             setError("Invalid credentials. Please try again.");
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+        setIsLoading(true);
+        
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/signin/`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        })
+
+        const data = await response.json()
+
+        if (response.ok){
+            localStorage.setItem("user", data.user);
+            localStorage.setItem("access_token", data.access);
+            localStorage.setItem("refresh_token", data.refresh);
+
+            alert("Succesfully logged in!")
+
+            navigate('/dashboard')
+        }else{
+            alert("Something went wrong while logging you in: " + JSON.stringify(data))
         }
-        setIsLoading(false);
-    }, 1500);
-  };
+    };
 
-  const handleGoogleAuth = async (credentialResponse) => {
-    
-  }
+    const handleGoogleAuth = async (credentialResponse) => {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/oauth/`,{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({access_token: credentialResponse.credential})
+		})
+
+		const data = await response.json()
+
+		if (response.ok){
+			localStorage.setItem("user", data.user);
+			localStorage.setItem("access_token", data.access);
+			localStorage.setItem("refresh_token", data.reffresh);
+			
+			alert("Successfuly logged in!")
+			navigate('/dashboard')
+		}else{
+			alert("Something went wrong: " + JSON.stringify(data))
+		}
+    }
 
   return (
     <div className="auth-container">
