@@ -1,26 +1,16 @@
-"""
-URL configuration for config project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+# ===== DJANGO UTILITIES =====
 from django.contrib import admin
 from django.urls import path
 
+# ===== MODULES FOR MEDIA URL =====
 from django.conf import settings
 from django.conf.urls.static import static
 
+# ===== REST FRAMEWORK JWT VIEWS =====
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView, TokenVerifyView
+
+# ===== AUTHENTICATION ENDPOINTS =====
+from users.views import sign_in, sign_up, google_oauth, logout
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +20,14 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     
+    # Authentication
+    path('auth/signin/', sign_in, name='signin'),
+    path('auth/signup/', sign_up, name='signup'),
+    path('auth/oauth/', google_oauth, name='google-auth'),
+    path('auth/logout/', logout, name='logout'),
+
+    #
+
 ]
 
 if settings.DEBUG:

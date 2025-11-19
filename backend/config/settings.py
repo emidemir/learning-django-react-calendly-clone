@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Django apps
+    'users',
+    'scheduling',
+    'integrations',
 
     # DRF
     'rest_framework',
@@ -49,7 +52,7 @@ INSTALLED_APPS = [
 
     # JWT
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt.token_blacklist', # For blacklisting tokens after logout
 
     # Google OAuth: https://docs.allauth.org/en/dev/installation/quickstart.html
     'allauth',
@@ -182,6 +185,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 
 # ========== SIMPLE JWT CONFS ==========
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
 from datetime import timedelta
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=25),
