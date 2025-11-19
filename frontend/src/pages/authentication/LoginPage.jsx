@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import InputField from '../../components/core-ui/InputField.jsx';
 import Button from '../../components/core-ui/Button.jsx';
 import { Link } from 'react-router-dom'; // Assuming you are using react-router-dom
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
-// We'll create a dedicated CSS file for Auth layouts later, but for now, use App.css
-// import '../../css/AuthLayout.css'; 
+import '../../css/AuthLayout.css';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -36,6 +36,10 @@ const LoginPage = () => {
     }, 1500);
   };
 
+  const handleGoogleAuth = async (credentialResponse) => {
+    
+  }
+
   return (
     <div className="auth-container">
       <div className="auth-box">
@@ -56,18 +60,35 @@ const LoginPage = () => {
             value={formData.password}
             onChange={handleChange}
             placeholder="********"
-            error={error} // Display general error here
+            error={error}
           />
-          <Button 
-            type="submit" 
-            variant="primary" 
-            size="large" 
-            loading={isLoading}
-            disabled={!formData.email || !formData.password}
-          >
-            {isLoading ? 'Logging In...' : 'Continue'}
-          </Button>
+          
+          {/* Added margin for spacing and fullWidth prop */}
+          <div style={{ marginTop: '10px' }}>
+            <Button 
+              type="submit" 
+              variant="primary" 
+              size="large" 
+              fullWidth 
+              loading={isLoading}
+              disabled={!formData.email || !formData.password}
+            >
+              {isLoading ? 'Logging In...' : 'Continue'}
+            </Button>
+          </div>
         </form>
+
+        {/* Google Login Section */}
+        <div className="auth-divider">
+            <span>or</span>
+        </div>
+
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}>
+            <GoogleLogin
+                onSuccess={handleGoogleAuth}
+            />  
+        </GoogleOAuthProvider>
+
         <p className="auth-link-footer">
           Don't have an account? <Link to="/signup">Sign Up</Link>
         </p>

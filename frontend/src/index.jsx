@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-
 import EventSelection from './pages/scheduling/EventSelection'
 import TimeSelection from './pages/scheduling/TimeSelection'
 import BookingForm from './pages/scheduling/BookingForm'
@@ -15,8 +14,8 @@ import EventAction from './pages/scheduling/EventAction'
 
 import LoginPage from './pages/authentication/LoginPage'
 import SignupPage from './pages/authentication/SignupPage'
-import LoginPage from './pages/authentication/LoginPage'
 
+import EventTypesManager from './pages/dashboard/EventTypesManager'
 import DashboardHome from './pages/dashboard/DashboardHome'
 import EventTypeEditor from './pages/dashboard/EventTypeEditor'
 import ScheduledEvents from './pages/dashboard/ScheduledEvents'
@@ -26,6 +25,7 @@ import ProfileSettings from './pages/dashboard/ProfileSettings'
 
 
 const router = createBrowserRouter([
+  {path:'/', element: <App/>},
   // Scheduling
   {path:'/username', element:<EventSelection/>},
   {path:'/username/:eventSlug', element:<TimeSelection/>},

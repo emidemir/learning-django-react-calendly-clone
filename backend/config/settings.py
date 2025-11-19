@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     
     # CORS
-    'corsheaders'
+    'corsheaders',
 
     # JWT
     'rest_framework_simplejwt',
@@ -105,7 +105,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -228,6 +232,7 @@ LOGOUT_REDIRECT_URL = 'auth/login/'
 
 
 # ========== CORS ==========
+# https://pypi.org/project/django-cors-headers/
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",

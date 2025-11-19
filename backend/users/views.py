@@ -20,6 +20,7 @@ User = get_user_model()
 @permission_classes([AllowAny])
 def sign_up(request):
     """Traditional signup via signup form"""
+    username = request.data.get('username')
     email = request.data.get('email') 
     password = request.data.get('password') 
     first_name = request.data.get('first_name')
@@ -64,10 +65,9 @@ def sign_up(request):
                 'last_name': user.last_name,
             }
         }, status=status.HTTP_201_CREATED)
-    
-    except:
+    except Exception as E:
         return Response(
-            {'error': e.messages},
+            {'error': E},
             status=status.HTTP_400_BAD_REQUEST
         )
 
@@ -119,6 +119,7 @@ def google_oauth(request):
     # -check your notes if you forget it-
 
     google_access_token = request.data.get('access_token')
+    print("1")
 
     if not google_access_token:
         return Response({
@@ -129,7 +130,7 @@ def google_oauth(request):
         # https://stackoverflow.com/a/24646356/17799171
         # https://developers.google.com/identity/sign-in/android/backend-auth
         verification_url = f"https://oauth2.googleapis.com/tokeninfo?id_token={google_access_token}"
-        verification_response = request.get(verification_url)
+        verification_response = requests.get(verification_url)
         
         if verification_response.status_code != 200:
             return Response({

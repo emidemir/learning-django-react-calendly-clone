@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     is_verified = models.BooleanField(default=False)
-    verification_code = models.PositiveIntegerField(validators=[
+    verification_code = models.PositiveIntegerField(default=123456, validators=[
         MinValueValidator(100000), 
         MaxValueValidator(999999)
     ])

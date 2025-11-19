@@ -1,0 +1,78 @@
+/* src/css/AuthLayout.css */
+
+/* Centers the content on the screen */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    background-color: #f4f6f9; /* Light gray background for contrast */
+    padding: 20px;
+  }
+  
+  /* The white card */
+  .auth-box {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 400px; /* Prevents it from getting too wide on desktop */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e1e4e8;
+  }
+  
+  /* Heading styles */
+  .auth-box h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #1a202c;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+  }
+  
+  /* Form specific adjustments */
+  .auth-box form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Footer link styles */
+  .auth-link-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #6c757d;
+  }
+  
+  .auth-link-footer a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .auth-link-footer a:hover {
+    text-decoration: underline;
+  }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 24px 0;
+    color: #6c757d;
+  }
+  
+  .auth-divider::before,
+  .auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e1e4e8;
+  }
+  
+  .auth-divider span {
+    padding: 0 10px;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
