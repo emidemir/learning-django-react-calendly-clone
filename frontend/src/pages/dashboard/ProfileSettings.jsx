@@ -5,14 +5,12 @@ import InputField from '../../components/core-ui/InputField.jsx';
 import Button from '../../components/core-ui/Button.jsx';
 import '../../css/ProfileSettings.css';
 
-const mockProfile = {
-    fullName: 'John Doe',
-    username: 'john-doe',
-    email: 'john.doe@example.com',
-    profilePicture: 'https://via.placeholder.com/150',
-};
+import { useNavigate } from 'react-router-dom';
 
 const ProfileSettings = () => {
+
+    const navigate = useNavigate();
+
     const [profile, setProfile] = useState({});
     const [passwordData, setPasswordData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
     const [isSavingProfile, setIsSavingProfile] = useState(false);
@@ -21,8 +19,15 @@ const ProfileSettings = () => {
     const authToken = localStorage.getItem("access_token");
     const userID = JSON.parse(localStorage.getItem("user")).id
 
+    // Fetch profile data
     useEffect(()=> {
         const fetchProfileData = async () => {
+
+            if (!authToken){
+                alert("Token expired, you need to login again!");
+                navigate("/login");
+            }
+
             const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profiles/${userID}/`,{
                 method: "GET",
                 headers: {
@@ -39,7 +44,8 @@ const ProfileSettings = () => {
                     last_name: data.last_name,
                     username: data.username,
                     email: data.email,
-                    profilePicture: `${process.env.REACT_APP_BACKEND_URL}${data.img_url}`
+                    profilePicture: `${process.env.REACT_APP_BACKEND_URL}${data.img_url}`,
+                    bio: data.bio
                 })
                 console.log(data)
             }else{
@@ -78,19 +84,34 @@ const ProfileSettings = () => {
 
     };
 
-    const handleChangePassword = (e) => {
+    const handleChangePassword = async (e) => {
         e.preventDefault();
         if (passwordData.newPassword !== passwordData.confirmPassword) {
             alert('New passwords do not match!');
             return;
+        }else{
+            const payload = {
+                ...profile,
+                current_password: passwordData.oldPassword,
+                new_password: passwordData.confirmPassword,
+            };
+
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profiles/${userID}/`,{
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authToken}`,
+                },
+                body: JSON.stringify(payload)
+            });
+            const data = response.json();
+
+            if (response.ok){
+                alert("Password changed succesfully!");
+            }else{
+                alert("Something went wrong!");
+            }
         }
-        setIsChangingPassword(true);
-        console.log('Changing Password:', passwordData);
-        setTimeout(() => {
-            setIsChangingPassword(false);
-            setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
-            alert('Password changed successfully!');
-        }, 1500);
     };
 
     return (
