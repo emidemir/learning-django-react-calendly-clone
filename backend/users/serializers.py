@@ -15,11 +15,15 @@ class ProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', read_only=True)
     current_password = serializers.CharField(
         write_only=True,
+        required=False,
+        allow_blank=True,
         help_text='Leave empty if no change needed',
         style={'input_type': 'password', 'placeholder': 'Password'}
     )
     new_password = serializers.CharField(
         write_only=True,
+        required=False,
+        allow_blank=True,
         help_text='Leave empty if no change needed',
         style={'input_type': 'password', 'placeholder': 'Password'}
     )
@@ -39,17 +43,23 @@ class ProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         user_data = {}
 
-        curren_password = validated_data.pop('current_password')
-        new_password = validated_data.pop('new_password')
+        # Get values, defaulting to None
+        current_password = validated_data.pop('current_password', None)
+        new_password = validated_data.pop('new_password', None)
 
-        if new_password and curren_password:
+        # LOGIC FIX: Check if they are "truthy" (not None AND not empty string)
+        if current_password and new_password:
+            
+            if current_password == new_password:
+                # CRITICAL FIX: Use 'raise', do not use 'return'
+                raise serializers.ValidationError({'error': "Bro, the current password and the new one are the same!"})
+
             user = instance.user
-            if not user.check_password(curren_password):
-                serializers.ValidationError({'error': "Given current password is not valid! Are you a thief or something?????"})
+            if not user.check_password(current_password):
+                raise serializers.ValidationError({'error': "Given current password is not valid!"})
+            
             user.set_password(new_password)
             user.save()
-        else:
-            serializers.ValidationError({"error": "Both current and new passwords are required."})
 
 
         if 'user' in validated_data:

@@ -11,8 +11,8 @@ const ProfileSettings = () => {
 
     const navigate = useNavigate();
 
-    const [profile, setProfile] = useState({});
-    const [passwordData, setPasswordData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
+    const [profile, setProfile] = useState({username: '', first_name: '', last_name: '', email: '', bio: '', profilePicture: ''});
+    const [passwordData, setPasswordData] = useState({ current_password: '', new_password: '', confirmPassword: '' });
     const [isSavingProfile, setIsSavingProfile] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     
@@ -39,6 +39,7 @@ const ProfileSettings = () => {
             console.log(data)
             
             if (response.ok){
+                setIsSavingProfile(true)
                 setProfile({
                     first_name: data.first_name,
                     last_name: data.last_name,
@@ -51,6 +52,7 @@ const ProfileSettings = () => {
             }else{
                 alert("Something went wrong when fetching profile data: " + JSON.stringify(data))
             }
+            setIsSavingProfile(false)
         };
 
         fetchProfileData();
@@ -70,29 +72,37 @@ const ProfileSettings = () => {
         
         const payload = {
             ...profile,
-            
         }
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profiles/${userID}`,{
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profiles/${userID}/`,{
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${authToken}`,
             },
-            body: JSON.stringify()
+            body: JSON.stringify(payload)
         })
+
+        const data = await response.json();
+
+        if (response.ok){
+            alert("Succesfully modified the profile data.")
+        }else{
+            alert("Something went wrong: " + JSON.stringify(data))
+        }
+        setIsSavingProfile(false)
 
     };
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
-        if (passwordData.newPassword !== passwordData.confirmPassword) {
+        if (passwordData.new_password !== passwordData.confirmPassword) {
             alert('New passwords do not match!');
             return;
         }else{
             const payload = {
                 ...profile,
-                current_password: passwordData.oldPassword,
+                current_password: passwordData.current_password,
                 new_password: passwordData.confirmPassword,
             };
 
@@ -144,6 +154,7 @@ const ProfileSettings = () => {
                             label="Email (Read-Only)"
                             name="email"
                             value={profile.email}
+                            readOnly={true}
                             disabled
                         />
                         <div className="save-button-container">
@@ -159,17 +170,17 @@ const ProfileSettings = () => {
                     <form onSubmit={handleChangePassword}>
                         <InputField
                             label="Current Password"
-                            name="oldPassword"
+                            name="current_password"
                             type="password"
-                            value={passwordData.oldPassword}
+                            value={passwordData.current_password}
                             onChange={handlePasswordChange}
                             required
                         />
                         <InputField
                             label="New Password"
-                            name="newPassword"
+                            name="new_password"
                             type="password"
-                            value={passwordData.newPassword}
+                            value={passwordData.new_password}
                             onChange={handlePasswordChange}
                             required
                         />
