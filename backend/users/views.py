@@ -45,7 +45,7 @@ def sign_up(request):
         # validate_password(password)
         # Create user
         user = User.objects.create_user(
-            username=email,
+            username=username,
             email=email,
             password=password,
             first_name=first_name,
