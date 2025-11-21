@@ -24,7 +24,7 @@ class EventType(models.Model):
         MinValueValidator(0),
         MaxValueValidator(30),
     ])
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True, blank=True, null=True)
 
 # 2. The Rules: When are you actually free?
 class AvailabilityRule(models.Model):
@@ -44,6 +44,7 @@ class AvailabilityRule(models.Model):
     day_of_week = models.CharField(max_length=9, choices=Days.choices, blank=True, null=True)
     isAvailable = models.BooleanField(default = True)
 # 3. The Result: Who booked what?
+
 class Booking(models.Model):
     event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name='bookings')
     booker_name = models.CharField(max_length=100)

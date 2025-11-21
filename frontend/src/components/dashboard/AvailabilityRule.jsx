@@ -9,8 +9,6 @@ const AvailabilityRule = ({ initialRules, onChange }) => {
     const [rules, setRules] = useState([]);
     const isInitialized = useRef(false);
 
-    console.log(initialRules)
-
     // Initialize existing rules
     useEffect(() => {
         if (!isInitialized.current) {

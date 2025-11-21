@@ -125,11 +125,12 @@ const EventTypeEditor = () => {
             }
 
         }else{
+            console.log("Hello??")
             const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/event_types/`,{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Auhtorization": `Bearer ${authToken}`,
+                    "Authorization": `Bearer ${authToken}`,
                 },
                 body: JSON.stringify(payload)
             });

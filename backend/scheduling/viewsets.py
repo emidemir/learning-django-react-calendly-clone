@@ -8,12 +8,12 @@ class EventTypeViewset(viewsets.ModelViewSet):
     serializer_class = EventTypeSerializer
     permission_classes = [IsAuthenticated]
 
-    
-
     def get_queryset(self):
         user = self.request.user
         return EventType.objects.filter(host=user)
-
+    
+    def perform_create(self, serializer):
+        serializer.save(host=self.request.user)
 
 class AvailabiltyRuleViewset(viewsets.ModelViewSet):
     serializer_class = AvailabilityRuleSerializer
