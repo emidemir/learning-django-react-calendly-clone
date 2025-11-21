@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 CustomUser = get_user_model()
 
@@ -8,13 +9,27 @@ class EventType(models.Model):
     host = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='event_types')
     title = models.CharField(max_length=200)
     description = models.TextField()
-    duration = models.TextField(blank=True)
+    # Make sure the duration (in minutes) is less than 24 hours, greater than 0 hours
+    duration = models.IntegerField(validators=[
+        MinValueValidator(0),
+        MaxValueValidator(1440)
+    ])
+
+    bufferBefore = models.IntegerField(default=10, validators=[
+        MinValueValidator(0),
+        MaxValueValidator(30),
+    ])
+    
+    bufferAfter = models.IntegerField(default=10, validators=[
+        MinValueValidator(0),
+        MaxValueValidator(30),
+    ])
     is_active = models.BooleanField(default=True)
 
 # 2. The Rules: When are you actually free?
 class AvailabilityRule(models.Model):
     
-    event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name='availability_rule')
+    event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name='availability_rules')
     start_time = models.TimeField()
     end_time = models.TimeField()
 
@@ -27,7 +42,7 @@ class AvailabilityRule(models.Model):
         SATURDAY = 'SATURDAY', 'Saturday'
         SUNDAY = 'SUNDAY', 'Sunday'
     day_of_week = models.CharField(max_length=9, choices=Days.choices, blank=True, null=True)
-
+    isAvailable = models.BooleanField(default = True)
 # 3. The Result: Who booked what?
 class Booking(models.Model):
     event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name='bookings')

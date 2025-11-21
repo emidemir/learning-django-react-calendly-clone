@@ -23,7 +23,6 @@ import AvailabilitySettings from './pages/dashboard/AvailabilitySettings'
 import IntegrationsSettings from './pages/dashboard/IntegrationsSettings'
 import ProfileSettings from './pages/dashboard/ProfileSettings'
 
-
 const router = createBrowserRouter([
   {path:'/', element: <App/>},
   // Scheduling
@@ -32,15 +31,16 @@ const router = createBrowserRouter([
   {path:'/username/:eventSlug/details', element:<BookingForm/>},
   {path:'/success', element:<BookingConfirmation/>},
   {path:'/event/:id/reschedule', element:<EventAction/>},
-
+  
   // Authentication
   {path:'/login', element:<LoginPage/>},
   {path:'/signup', element:<SignupPage/>},
-
+  
   // Dashboard
   {path:'/dashboard', element:<DashboardHome/>},
   {path:'/event-types', element:<EventTypesManager/>},
   {path:'/event-types/create', element:<EventTypeEditor/>},
+  {path:'/event-types/:eventID/edit', element:<EventTypeEditor/>},
   {path:'/scheduled-events', element:<ScheduledEvents/>},
   {path:'/availability', element:<AvailabilitySettings/>},
   {path:'/settings/integrations', element:<IntegrationsSettings/>},

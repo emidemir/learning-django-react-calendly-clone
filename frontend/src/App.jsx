@@ -1,11 +1,11 @@
 import './App.css';
-import DashboardHome from './pages/dashboard/DashboardHome'
+import LoginPage from './pages/authentication/LoginPage'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <DashboardHome/>
+        <LoginPage/>
       </header>
     </div>
   );

@@ -8,6 +8,8 @@ class EventTypeViewset(viewsets.ModelViewSet):
     serializer_class = EventTypeSerializer
     permission_classes = [IsAuthenticated]
 
+    
+
     def get_queryset(self):
         user = self.request.user
         return EventType.objects.filter(host=user)

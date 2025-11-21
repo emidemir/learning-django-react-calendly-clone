@@ -1,5 +1,5 @@
 // EventTypeEditor.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout.jsx';
 import InputField from '../../components/core-ui/InputField.jsx';
@@ -7,78 +7,143 @@ import Button from '../../components/core-ui/Button.jsx';
 import AvailabilityRule from '../../components/dashboard/AvailabilityRule.jsx'; // To be created next
 import '../../css/EventTypeEditor.css';
 
-// Mock Data (to simulate fetching an existing event)
-const mockEventDetail = {
-    id: 1,
-    name: '30 Minute Meeting',
-    slug: '30-min-meeting',
-    duration: 30, // in minutes
-    description: 'A quick catch-up or demo call.',
-    locationType: 'Zoom',
-    bufferBefore: 5,
-    bufferAfter: 5,
-    availability: [
-        { day: 'Monday', start: '09:00', end: '17:00' },
-        { day: 'Tuesday', start: '09:00', end: '17:00' },
-        // ... more days
-    ]
-};
-
 const EventTypeEditor = () => {
-    const { id } = useParams(); // Check if we're editing an existing event
+    const { eventID } = useParams();
     const navigate = useNavigate();
-    const isEditing = !!id;
+
+    const authToken = localStorage.getItem("access_token");
+ 
+    const isEditing = Boolean(eventID);
     const [isLoading, setIsLoading] = useState(false);
     
     // Initial state setup
     const [formData, setFormData] = useState({
-        name: '',
-        slug: '',
-        duration: 30,
+        title: '',
+        duration: 0,
         description: '',
-        locationType: 'Zoom',
         bufferBefore: 0,
         bufferAfter: 0,
-        availability: []
+        availability: [],
+        bufferBefore: 0,
+        bufferAfter: 0,
+        isActive: false,
+        newly_created_availability_rules: []
     });
 
+    // Fetch event_type data
     useEffect(() => {
-        if (isEditing) {
+        const fetchEventDetails = async () => {
             setIsLoading(true);
-            // Simulate API call to fetch event details
-            setTimeout(() => {
-                setFormData(mockEventDetail);
-                setIsLoading(false);
-            }, 500);
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/event_types/${eventID}/`,{
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authToken}`,
+                }
+            });
+            const data = await response.json();
+            if (response.ok){
+                setFormData({
+                    id: data.id,
+                    title: data.title,
+                    description: data.description,
+                    duration: data.duration,
+                    availability: data.availability_rules,
+                    isActive: data.is_active,
+                    bufferBefore: data.bufferBefore,
+                    bufferAfter: data.bufferAfter,
+                    newly_created_availability_rules: data.availability_rules,
+                })
+            }else{
+                alert("Something went wrong while fetching event details." + JSON.stringify(data));
+            }
+            setIsLoading(false);
         }
-    }, [isEditing, id]);
+        if (isEditing) {
+            fetchEventDetails();
+        }
+    }, [authToken, eventID]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleDurationChange = (e) => {
-        // Ensure duration is a positive number
-        const value = parseInt(e.target.value) || 0;
-        setFormData({ ...formData, duration: Math.max(value, 1) });
+        const rawValue = e.target.value;
+    
+        if (rawValue === "" || rawValue === "-") {
+            // ALLOW empty string or just a negative sign temporarily.
+            // This lets the user delete the number completely.
+            setFormData({ ...formData, duration: rawValue });
+        } else {
+            // Ensure the value is a positive integer before saving it to state.
+            const numericValue = parseInt(rawValue, 10);
+            
+            // Only update state if it's a valid number.
+            if (!isNaN(numericValue)) {
+                // Apply Math.max(1, value) to ensure it's at least 1, but don't use Math.max
+                // on the raw string, or you'll run into the original NaN issue.
+                setFormData({ ...formData, duration: numericValue });
+            }
+        }
     };
 
-    const handleAvailabilityChange = (newRules) => {
-        setFormData({ ...formData, availability: newRules });
-    };
+    const handleAvailabilityChange = useCallback((newRules) => {
+        setFormData(prev => ({ ...prev, newly_created_availability_rules: newRules }));
+    }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
 
-        // Placeholder for API call: POST for create, PUT/PATCH for update
-        console.log(isEditing ? 'Updating Event:' : 'Creating Event:', formData);
+        const payload = {
+            ...formData
+        };
 
-        setTimeout(() => {
-            setIsLoading(false);
-            alert(`Event ${isEditing ? 'Updated' : 'Created'} Successfully!`);
-            navigate('/event-types'); // Redirect back to list
-        }, 1500);
+        // If editing, fetch PUT. If not, fetch POST
+        if(isEditing){
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/event_types/${eventID}/`,{
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authToken}`,
+                },
+                body: JSON.stringify(payload)
+            })
+
+            const data = await response.json();
+
+            if (response.ok){
+                alert("Event succesfully edited.");
+                setFormData(prev => ({
+                    ...prev,
+                    availability: data.availability_rules,
+                    newly_created_availability_rules: data.availability_rules
+                }));
+            }else{
+                alert("Something went wrong while editing: " + JSON.stringify(data))
+            }
+
+        }else{
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/event_types/`,{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Auhtorization": `Bearer ${authToken}`,
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (response.ok){
+                alert("Event succesfully created!");
+                navigate('/dashboard')
+            }else{
+                alert("Something went wrong while creating event: " + JSON.stringify(data));
+            }
+        }
+        setIsLoading(false);
     };
 
     if (isLoading && isEditing) {
@@ -95,18 +160,10 @@ const EventTypeEditor = () => {
                         <h3>Event Details</h3>
                         <InputField
                             label="Event Name"
-                            name="name"
-                            value={formData.name}
+                            name="title"
+                            value={formData.title}
                             onChange={handleChange}
                             placeholder="e.g., 30 Minute Meeting"
-                            required
-                        />
-                        <InputField
-                            label="URL Slug (Public Link)"
-                            name="slug"
-                            value={formData.slug}
-                            onChange={handleChange}
-                            placeholder="e.g., quick-chat"
                             required
                         />
                         <div className="form-row">
@@ -117,13 +174,6 @@ const EventTypeEditor = () => {
                                 value={formData.duration}
                                 onChange={handleDurationChange}
                                 required
-                            />
-                            <InputField
-                                label="Location/Method"
-                                name="locationType"
-                                value={formData.locationType}
-                                onChange={handleChange}
-                                placeholder="e.g., Zoom, Google Meet"
                             />
                         </div>
                         <label htmlFor="description" className="input-label">Description</label>
