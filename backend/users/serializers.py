@@ -46,12 +46,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         # Get values, defaulting to None
         current_password = validated_data.pop('current_password', None)
         new_password = validated_data.pop('new_password', None)
-
-        # LOGIC FIX: Check if they are "truthy" (not None AND not empty string)
+        
+        # IMPORTANT NOTE! DON'T RETURN VALIDATION ERROR! SIMPLY RAISE IT!
         if current_password and new_password:
             
             if current_password == new_password:
-                # CRITICAL FIX: Use 'raise', do not use 'return'
                 raise serializers.ValidationError({'error': "Bro, the current password and the new one are the same!"})
 
             user = instance.user

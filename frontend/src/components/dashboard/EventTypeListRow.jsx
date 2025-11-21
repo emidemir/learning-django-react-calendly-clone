@@ -13,10 +13,10 @@ const EventTypeListRow = ({ event, onToggle }) => {
   };
 
   return (
-    <div className={`event-list-row ${event.isActive ? '' : 'event-list-row--inactive'}`}>
+    <div className={`event-list-row ${event.is_active ? '' : 'event-list-row--inactive'}`}>
       <div className="event-info">
-        <span className="event-status-indicator" title={event.isActive ? 'Active' : 'Inactive'}></span>
-        <h3>{event.name}</h3>
+        <span className="event-status-indicator" title={event.is_active ? 'Active' : 'Inactive'}></span>
+        <h3>{event.title}</h3>
         <p className="event-duration">{event.duration} min</p>
       </div>
 
