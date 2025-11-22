@@ -5,40 +5,100 @@ import Layout from '../../components/layout/Layout.jsx';
 import CalendarView from '../../components/scheduling/CalendarView.jsx';
 import TimeSlotGrid from '../../components/scheduling/TimeSlotGrid.jsx';
 import Button from '../../components/core-ui/Button.jsx';
-import TimeZoneSelector from '../../components/scheduling/TimeZoneSelector.jsx'; // To be created next
+import TimeZoneSelector from '../../components/scheduling/TimeZoneSelector.jsx'; 
 import '../../css/TimeSelection.css';
-
-// Mock Data
-const mockEventData = {
-    name: '30 Minute Meeting',
-    duration: 30,
-    locationType: 'Zoom',
-    description: 'A quick catch-up or demo call.',
-    hostName: 'John Doe',
-};
-
-// Mock available dates (ISO format: YYYY-MM-DD)
-const mockAvailableDates = ['2025-11-20', '2025-11-21', '2025-11-24', '2025-11-25', '2025-12-01'];
 
 const TimeSelection = () => {
     const { username, eventSlug } = useParams();
     const navigate = useNavigate();
-    const [event, setEvent] = useState(null);
+
+    const [eventData, setEventData] = useState(null);
+    // Initialize with empty array to avoid null checks in CalendarView
+    const [availableDays, setAvailableDates] = useState([]); 
+    
+    // User selected fields
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
     const [timeZone, setTimeZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-    useEffect(() => {
-        // Simulate API call to fetch event details based on slug
-        console.log(`Fetching details for ${username}/${eventSlug}`);
-        setTimeout(() => {
-            setEvent(mockEventData);
-        }, 500);
-    }, [username, eventSlug]);
+    // 1. NEW STATE: Needed to store the specific time slots for the selected date
+    const [availableSlotsForDay, setAvailableSlotsForDay] = useState([]);
 
-    const handleDateSelect = (date) => {
-        setSelectedDate(date);
-        setSelectedTime(null); // Reset time selection when date changes
+    const generateTimeSlots = (startTimeStr, endTimeStr, durationMinutes) => {
+        const slots = [];
+        const [startH, startM] = startTimeStr.split(':').map(Number);
+        const [endH, endM] = endTimeStr.split(':').map(Number);
+
+        let current = new Date();
+        current.setHours(startH, startM, 0, 0);
+
+        const end = new Date();
+        end.setHours(endH, endM, 0, 0);
+
+        while (current < end) {
+            // Format to HH:MM
+            const timeString = current.toLocaleTimeString('en-US', {
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit'
+            });
+            slots.push(timeString);
+            
+            // Add duration
+            current.setMinutes(current.getMinutes() + durationMinutes);
+        }
+        return slots;
+    };
+
+    useEffect(()=>{ 
+        const fetchEventData = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/booking/${username}/${eventSlug}/`,{
+                    method: "GET",
+                    headers:{
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                const data = await response.json();
+                if(response.ok){
+                    setEventData(data);
+                    // Safely handle if availability_rules is missing
+                    if (data.availability_rules) {
+                        const dates = data.availability_rules.map(rule => rule.day);
+                        const uniqueDates = [...new Set(dates)];
+                        setAvailableDates(uniqueDates);
+                    }
+                } else {
+                    console.log("Data fetch error:", data);
+                    alert("Data fetch failed in Time Selection!");
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+        }
+
+        fetchEventData();
+    }, [username, eventSlug]);
+    
+    const handleDateSelect = (dateString) => {
+        setSelectedDate(dateString);
+        setSelectedTime(null); // Reset time selection
+        
+        // 2. Find the rule for the selected date
+        const ruleForDay = eventData.availability_rules.find(r => r.day === dateString);
+
+        if (ruleForDay) {
+            // 3. Generate slots based on start_time, end_time, and event duration
+            const slots = generateTimeSlots(
+                ruleForDay.start_time, 
+                ruleForDay.end_time, 
+                eventData.duration
+            );
+            setAvailableSlotsForDay(slots);
+        } else {
+            setAvailableSlotsForDay([]);
+        }
     };
 
     const handleSlotSelect = (time) => {
@@ -47,26 +107,30 @@ const TimeSelection = () => {
 
     const handleNext = () => {
         if (selectedDate && selectedTime) {
-            // Encode the selected time and date in the URL for the booking form
             const dateTime = `${selectedDate}T${selectedTime}`; 
             navigate(`/${username}/${eventSlug}/details?datetime=${dateTime}&tz=${timeZone}`);
         }
     };
 
-    if (!event) {
-        return <Layout><div className="loading-state">Loading Event...</div></Layout>;
+    if (!eventData) {
+        return (
+            <Layout isLoggedIn={false}>
+                <div style={{ padding: "50px", textAlign: "center" }}>
+                    Loading event details...
+                </div>
+            </Layout>
+        );
     }
 
     return (
         <Layout isLoggedIn={false}>
             <div className="time-selection-page">
                 <div className="event-details-panel">
-                    <p className="host-name-small">{event.hostName}</p>
-                    <h2 className="event-name-large">{event.name}</h2>
+                    <p className="host-name-small">{username}</p>
+                    <h2 className="event-name-large">{eventData.title}</h2>
                     <div className="event-info-list">
-                        <p><span>⏰</span> {event.duration} min</p>
-                        <p><span>📍</span> {event.locationType}</p>
-                        <p><span>📝</span> {event.description}</p>
+                        <p><span>⏰</span> {eventData.duration} min</p>
+                        <p><span>📝</span> {eventData.description}</p>
                     </div>
                 </div>
 
@@ -74,7 +138,7 @@ const TimeSelection = () => {
                     <div className="date-selection-area">
                         <CalendarView 
                             onDateSelect={handleDateSelect} 
-                            availableDates={mockAvailableDates}
+                            availableDates={availableDays}
                         />
                         <TimeZoneSelector 
                             currentTimeZone={timeZone} 
@@ -87,6 +151,7 @@ const TimeSelection = () => {
                             selectedDate={selectedDate}
                             selectedTime={selectedTime}
                             onSlotSelect={handleSlotSelect}
+                            availableSlots={availableSlotsForDay} // <--- Passed the new state here
                         />
                         
                         <div className="next-button-container">

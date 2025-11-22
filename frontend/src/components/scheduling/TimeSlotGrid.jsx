@@ -1,32 +1,28 @@
-// TimeSlotGrid.jsx
+// src/components/scheduling/TimeSlotGrid.jsx
 import React from 'react';
-import '../../css/TimeSlotGrid.css'; // Correct relative import from components/scheduling
+import '../../css/TimeSlotGrid.css';
 
-// Mock available slots for a selected date (this data will come from the backend API)
-const mockSlots = [
-  '09:00 AM',
-  '09:30 AM',
-  '10:00 AM',
-  '10:30 AM',
-  '11:00 AM',
-  '11:30 AM',
-  '01:00 PM',
-  '01:30 PM',
-];
+// DELETE or COMMENT OUT the mockSlots array
+// const mockSlots = [...]; 
 
-const TimeSlotGrid = ({ selectedDate, onSlotSelect, selectedTime }) => {
+const TimeSlotGrid = ({ selectedDate, onSlotSelect, selectedTime, availableSlots = [] }) => {
   if (!selectedDate) {
     return <div className="time-grid-placeholder">Select a date to see available times.</div>;
   }
 
-  const dateDisplay = new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  // Format date for header (e.g. "Friday, Nov 23")
+  // Note: Ensure selectedDate string is parsed correctly to avoid timezone shifts in display
+  // A simple way is to just parse the YYYY-MM-DD string manually or use the string directly
+  const dateDisplay = new Date(selectedDate).toLocaleDateString('en-US', { 
+      weekday: 'long', month: 'short', day: 'numeric', timeZone: 'UTC' 
+  });
 
   return (
     <div className="time-slot-grid-container">
       <h4 className="time-grid-title">Select a Time for {dateDisplay}</h4>
       <div className="time-slot-list">
-        {mockSlots.length > 0 ? (
-          mockSlots.map((time, index) => (
+        {availableSlots.length > 0 ? (
+          availableSlots.map((time, index) => (
             <button
               key={index}
               className={`time-slot-button ${selectedTime === time ? 'time-slot-button--selected' : ''}`}

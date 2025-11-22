@@ -58,6 +58,7 @@ class AvailabilityRule(models.Model):
         SUNDAY = 'SUNDAY', 'Sunday'
     day_of_week = models.CharField(max_length=9, choices=Days.choices, blank=True, null=True)
     isAvailable = models.BooleanField(default = True)
+    day = models.DateField(null=True, blank=True)
 # 3. The Result: Who booked what?
 
 class Booking(models.Model):

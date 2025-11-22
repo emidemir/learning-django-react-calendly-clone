@@ -7,7 +7,7 @@ from users.models import Profile
 class AvailabilityRuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = AvailabilityRule
-        fields = ['id', 'start_time', 'end_time', 'day_of_week', 'isAvailable']
+        fields = ['id', 'start_time', 'end_time', 'day_of_week', 'isAvailable', 'day']
         
 class EventTypeSerializer(serializers.ModelSerializer):
     # READ ONLY FIELD for the frontend to read the existing events

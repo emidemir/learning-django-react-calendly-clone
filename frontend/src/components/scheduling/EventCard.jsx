@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../core-ui/Button.jsx';
-import '../../css/EventCard.css'; // Correct relative import from components/scheduling
+import '../../css/EventCard.css';
 
 const EventCard = ({ event, hostUsername }) => {
 	const navigate = useNavigate()
@@ -11,6 +11,7 @@ const EventCard = ({ event, hostUsername }) => {
 		const urlParts = event.booking_url.split('/'); 
         const extractedSlug = urlParts[2];
 
+		// Pass the eevent with the navigate to the public booking form, or page. Whatever
 		navigate(`/${hostUsername}/${extractedSlug}`);
 	}
 
