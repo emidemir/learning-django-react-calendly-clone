@@ -1,6 +1,6 @@
 // EventTypesManager.jsx
-import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout/Layout.jsx';
+import React, { useEffect, useState } from 'react';
 import Button from '../../components/core-ui/Button.jsx';
 import EventTypeListRow from '../../components/dashboard/EventTypeListRow.jsx';
 import { Link } from 'react-router-dom';
@@ -32,10 +32,39 @@ const EventTypesManager = () => {
 		getEventTypes();
 	}, [authToken]) // ← Also added authToken to dependency array
 
-	const handleToggle = (id) => {
-		setEvents(events.map(e => 
-			e.id === id ? { ...e, is_active: !e.is_active } : e // ← Changed isActive to is_active to match backend
-		));
+	const handleToggle = async (id) => {
+		
+		const eventToUpdate = events.find(event => event.id === id);
+
+		if (!eventToUpdate) {
+            alert(`Event with id ${id} not found.`);
+            return;
+        }
+
+		const newIsActive = !eventToUpdate.is_active;
+
+		const payload = {
+            ...eventToUpdate,
+            is_active: newIsActive
+        };
+
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/event_types/${id}/`,{
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${authToken}`,
+			},
+			body: JSON.stringify(payload)
+		});
+
+		if (response.ok){
+            setEvents(events.map(e => 
+                e.id === id ? { ...e, is_active: newIsActive } : e
+            ));
+        } else {
+            const errorData = await response.json().catch(() => response.statusText);
+            alert("Something went wrong while adjusting event status: " + JSON.stringify(errorData));
+        }
 	};
 
 	return (

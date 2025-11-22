@@ -26,6 +26,12 @@ class EventType(models.Model):
     ])
     is_active = models.BooleanField(default=True, blank=True, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+
 # 2. The Rules: When are you actually free?
 class AvailabilityRule(models.Model):
     

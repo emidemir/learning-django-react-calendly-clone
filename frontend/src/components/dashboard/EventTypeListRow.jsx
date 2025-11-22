@@ -30,11 +30,11 @@ const EventTypeListRow = ({ event, onToggle }) => {
           </Button>
         </Link>
         <Button 
-          variant={event.isActive ? "secondary" : "primary"} 
+          variant={event.is_active ? "secondary" : "primary"} 
           size="small" 
           onClick={() => onToggle(event.id)}
         >
-          {event.isActive ? 'Deactivate' : 'Activate'}
+          {event.is_active ? 'Deactivate' : 'Activate'}
         </Button>
         {/* Delete functionality would use a Modal for confirmation */}
       </div>
