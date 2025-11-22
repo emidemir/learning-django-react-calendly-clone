@@ -17,18 +17,40 @@ const mockHostData = {
     ]
 };
 
+// aaaaaaa
+
 const EventSelection = () => {
     const { username } = useParams(); // Get the host's username from the URL
-    const [host, setHost] = useState(null);
+    const [host, setHost] = useState({});
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Simulate API call to fetch host profile and active event types
-        console.log(`Fetching events for host: ${username}`);
-        setTimeout(() => {
-            setHost(mockHostData);
+        const fetchData = async () => {
+            setIsLoading(true);
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/${username}/`,{
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            const data = await response.json()
+            
+            if (response.ok){
+                console.log(data)
+                setHost({
+                    username: username,
+                    full_name: data.full_name,
+                    tagline: data.bio,
+                    profilePicture: data.profile_picture,
+                    eventTypes: data.event_types
+                })
+            }else{
+                alert("Something went wrong when fetching public booking user data: " + JSON.stringify(data ))
+            }
             setIsLoading(false);
-        }, 800);
+        }
+
+        fetchData()
     }, [username]);
 
     if (isLoading) {

@@ -2,8 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from .serializers import EventTypeSerializer
+from .serializers import EventTypeSerializer, PublicBookingSerializer
 from .models import EventType
+from users.models import Profile
 
 from django.shortcuts import render, get_object_or_404
 
@@ -19,5 +20,14 @@ class PublicBookingView(APIView):
         )
 
         serializer = EventTypeSerializer(event_type, context={'request': request})
+
+        return Response(serializer.data)
+    
+class BookingProfileEventFetch(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, username):
+        host_profile = get_object_or_404(Profile, user__username=username)
+        serializer = PublicBookingSerializer(host_profile, context={'request': request})
 
         return Response(serializer.data)

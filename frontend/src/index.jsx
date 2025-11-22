@@ -26,8 +26,8 @@ import ProfileSettings from './pages/dashboard/ProfileSettings'
 const router = createBrowserRouter([
   {path:'/', element: <App/>},
   // Scheduling
-  {path:'/username', element:<EventSelection/>},
-  {path:'/username/:eventSlug', element:<TimeSelection/>},
+  {path:'/:username', element:<EventSelection/>},
+  {path:'/:username/:eventSlug', element:<TimeSelection/>},
   {path:'/username/:eventSlug/details', element:<BookingForm/>},
   {path:'/success', element:<BookingConfirmation/>},
   {path:'/event/:id/reschedule', element:<EventAction/>},

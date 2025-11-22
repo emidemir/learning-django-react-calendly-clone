@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from .models import EventType,AvailabilityRule,Booking
 
+from users.models import Profile
+
 class AvailabilityRuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = AvailabilityRule
@@ -53,3 +55,23 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = '__all__'
+
+class PublicBookingSerializer(serializers.ModelSerializer):
+    # Fields from the user model
+    full_name = serializers.CharField(source='user.full_name')
+    username = serializers.CharField(source='user.username')
+    
+    # Fields from the profile model
+    profile_picture = serializers.ImageField(source='avatar')
+    
+    # Fields from the event model
+    event_types = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile
+        fields = ['full_name', 'username', 'profile_picture', 'bio', 'event_types']
+
+    def get_event_types(self, obj):
+        user = obj.user
+        active_events = EventType.objects.filter(host = user, is_active = True)
+        return EventTypeSerializer(active_events, many=True).data
