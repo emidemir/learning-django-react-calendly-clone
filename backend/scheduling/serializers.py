@@ -10,12 +10,18 @@ class AvailabilityRuleSerializer(serializers.ModelSerializer):
 class EventTypeSerializer(serializers.ModelSerializer):
     # READ ONLY FIELD for the frontend to read the existing events
     availability_rules = AvailabilityRuleSerializer(many=True, read_only=True)
+    booking_url = serializers.SerializerMethodField(read_only=True) # SLug for an event
 
     # WRITE ONLY FIELD for the frontend to write the newly created rules
     newly_created_availability_rules = AvailabilityRuleSerializer(write_only=True, many=True, required=False)
     class Meta:
         model = EventType
-        fields = ['id', 'title', 'description', 'duration', 'availability_rules', 'is_active', 'bufferBefore', 'bufferAfter', 'newly_created_availability_rules']
+        fields = ['id', 'title', 'description', 'booking_url', 'duration', 'availability_rules', 'is_active', 'bufferBefore', 'bufferAfter', 'newly_created_availability_rules', 'booking_url']
+    
+    def get_booking_url(self, obj):
+        request = self.context.get('request')
+        
+        return f'booking/{obj.host.username}/{obj.slug}/'
     
     # Nested serializers are read_only by default. Override the create method to be able to
     # handle post requests without availabilty_rules
@@ -25,7 +31,7 @@ class EventTypeSerializer(serializers.ModelSerializer):
 
         for rule in new_rules:
             AvailabilityRule.objects.create(event_type=event_type, **rule)
-         
+        
         return event_type
     
     # For editing the existing event type object.

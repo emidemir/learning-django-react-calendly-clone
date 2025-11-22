@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import '../../css/EventTypeListRow.css'; // Correct relative import from components/dashboard
 
 const EventTypeListRow = ({ event, onToggle }) => {
-  const publicLink = `${window.location.origin}/${event.link}`;
 
   const handleCopy = () => {
+    const publicLink = `${process.env.REACT_APP_BACKEND_URL}/${event.booking_url}`
     navigator.clipboard.writeText(publicLink);
     alert(`Link copied: ${publicLink}`);
   };

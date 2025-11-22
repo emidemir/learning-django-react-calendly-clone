@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.template.defaultfilters import slugify
 
 CustomUser = get_user_model()
 
@@ -9,6 +10,10 @@ class EventType(models.Model):
     host = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='event_types')
     title = models.CharField(max_length=200)
     description = models.TextField()
+
+    # Slug is used for each event, created by serializer. A visitor will use this url for booking
+    slug = models.SlugField(null=True, blank=True, unique=True, max_length=200)
+
     # Make sure the duration (in minutes) is less than 24 hours, greater than 0 hours
     duration = models.IntegerField(validators=[
         MinValueValidator(0),
@@ -30,7 +35,11 @@ class EventType(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        unique_together = ['host', 'slug']
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
 # 2. The Rules: When are you actually free?
 class AvailabilityRule(models.Model):

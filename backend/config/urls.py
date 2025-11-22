@@ -12,8 +12,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,
 # ===== AUTHENTICATION ENDPOINTS =====
 from users.views import sign_in, sign_up, google_oauth, logout
 
+# ===== AUTHENTICATION ENDPOINTS ===== 
+from scheduling.views import PublicBookingView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
 
     # JWT 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -28,6 +32,10 @@ urlpatterns = [
 
     # Router URLS
     path('', include('config.routers')),
+    
+    # Public booking endpoint
+    path('booking/<str:username>/<slug:slug>/', PublicBookingView.as_view(), name='public-booking'),
+
 
 ]
 
