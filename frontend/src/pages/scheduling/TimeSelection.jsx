@@ -65,8 +65,16 @@ const TimeSelection = () => {
                     setEventData(data);
                     // Safely handle if availability_rules is missing
                     if (data.availability_rules) {
-                        const dates = data.availability_rules.map(rule => rule.day);
+                        // 1. Filter: Keep only rules where isAvailable is true
+                        const activeRules = data.availability_rules.filter(rule => rule.isAvailable === true);
+                        
+                        // 2. Map: Get the days from those active rules
+                        const dates = activeRules.map(rule => rule.day);
+                        console.log(dates)
+                        
+                        // 3. Unique: Remove duplicates so the calendar knows which days are clickable
                         const uniqueDates = [...new Set(dates)];
+                        
                         setAvailableDates(uniqueDates);
                     }
                 } else {
@@ -85,7 +93,9 @@ const TimeSelection = () => {
         setSelectedDate(dateString);
         setSelectedTime(null); // Reset time selection
         
-        const rulesForDay = eventData.availability_rules.filter(r => r.day === dateString);
+        const rulesForDay = eventData.availability_rules.filter(r => 
+            r.day === dateString && r.isAvailable === true
+        );
 
         if (rulesForDay.length > 0) {
             const slots = rulesForDay.map(rule => {
