@@ -1,70 +1,59 @@
 // BookingForm.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout.jsx';
 import InputField from '../../components/core-ui/InputField.jsx';
 import Button from '../../components/core-ui/Button.jsx';
 import '../../css/BookingForm.css';
 
-// Mock Data
-const mockBookingDetails = {
-    hostName: 'John Doe',
-    eventName: '30 Minute Meeting',
-    duration: 30,
-    locationType: 'Zoom',
-};
-
 const BookingForm = () => {
-    const { username, eventSlug } = useParams();
+    const { username, eventSlug} = useParams();
     const [searchParams] = useSearchParams();
+
     const navigate = useNavigate();
     
     // Parse URL params for pre-selected time
     const dateTimeParam = searchParams.get('datetime');
     const timeZoneParam = searchParams.get('tz');
+    const title = searchParams.get('title')
+    const duration = searchParams.get('duration')
     
-    const [bookingDetails, setBookingDetails] = useState(mockBookingDetails);
-    const [formData, setFormData] = useState({ name: '', email: '', notes: '' });
+    const [formData, setFormData] = useState({ booker_name: '', booker_email: '', notes: '' });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    useEffect(() => {
-        // Fetch event details (optional, already mocked)
-        if (!dateTimeParam || !timeZoneParam) {
-            setError("Missing date or time zone information. Please go back and select a time.");
-        }
-    }, [dateTimeParam, timeZoneParam]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
         setIsLoading(true);
 
         const bookingData = {
             ...formData,
-            host: username,
-            eventSlug: eventSlug,
-            startTime: dateTimeParam,
-            timeZone: timeZoneParam,
+            host_name: username,
+            event_slug: eventSlug,
+            event_title: title,
+            event_date_time: dateTimeParam,
+            time_zone: timeZoneParam,
         };
 
-        // Placeholder for API call: POST to /api/booking/
-        console.log('Final Booking Submission:', bookingData);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/${username}/${eventSlug}/details?datetime=${dateTimeParam}&tz=${timeZoneParam}&title=${title}&duration=${duration}`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bookingData)
+        });
 
-        setTimeout(() => {
-            setIsLoading(false);
-            if (Math.random() > 0.1) { // 90% success rate simulation
-                console.log("Booking successful!");
-                // Redirect to success page
-                navigate(`/success?bookingId=123`); 
-            } else {
-                setError("Booking failed. Please try a different time or contact the host.");
-            }
-        }, 2000);
+        if (response.ok){
+            alert("Booking created succesfully!");
+            navigate('/');
+        }else{
+            alert("Something happened while booking creation");
+        }
     };
 
     // Format the selected date and time for display
@@ -93,13 +82,11 @@ const BookingForm = () => {
         <Layout isLoggedIn={false}>
             <div className="booking-form-page">
                 <div className="booking-summary-panel">
-                    <p className="summary-host">{bookingDetails.hostName}</p>
-                    <h2 className="summary-event">{bookingDetails.eventName}</h2>
+                    <p className="summary-host">{username}</p>
+                    <h2 className="summary-event">{title}</h2>
                     <div className="summary-info">
-                        <p><span>⏰</span> {bookingDetails.duration} min</p>
+                        <p><span>⏰</span> {duration} min</p>
                         <p><span>📅</span> {formattedDateTime}</p>
-                        <p><span>🌐</span> {timeZoneParam}</p>
-                        <p><span>📍</span> {bookingDetails.locationType}</p>
                     </div>
                 </div>
 
@@ -108,16 +95,16 @@ const BookingForm = () => {
                     <form onSubmit={handleSubmit}>
                         <InputField
                             label="Your Name"
-                            name="name"
-                            value={formData.name}
+                            name="booker_name"
+                            value={formData.booker_name}
                             onChange={handleChange}
                             required
                         />
                         <InputField
                             label="Email Address"
-                            name="email"
+                            name="booker_email"
                             type="email"
-                            value={formData.email}
+                            value={formData.booker_email}
                             onChange={handleChange}
                             required
                         />
@@ -138,7 +125,7 @@ const BookingForm = () => {
                             variant="primary" 
                             size="large" 
                             loading={isLoading}
-                            disabled={isLoading || !formData.name || !formData.email}
+                            disabled={isLoading || !formData.booker_name || !formData.booker_email}
                         >
                             {isLoading ? 'Confirming...' : 'Confirm Booking'}
                         </Button>

@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.template.defaultfilters import slugify
 
+import pytz
+
 CustomUser = get_user_model()
 
 # 1. The Menu: Types of meetings you offer
@@ -59,9 +61,12 @@ class AvailabilityRule(models.Model):
     day_of_week = models.CharField(max_length=9, choices=Days.choices, blank=True, null=True)
     isAvailable = models.BooleanField(default = True)
     day = models.DateField(null=True, blank=True)
-# 3. The Result: Who booked what?
 
+# 3. The Result: Who booked what?
 class Booking(models.Model):
+    TIMEZONE_CHOICES = tuple(zip(pytz.common_timezones, pytz.common_timezones))
+    time_zone = models.CharField(max_length=32, choices=TIMEZONE_CHOICES, default='UTC')
+    
     event_type = models.ForeignKey(EventType, on_delete=models.CASCADE, related_name='bookings')
     booker_name = models.CharField(max_length=100)
     booker_email = models.EmailField()

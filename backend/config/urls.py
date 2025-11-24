@@ -13,7 +13,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,
 from users.views import sign_in, sign_up, google_oauth, logout
 
 # ===== AUTHENTICATION ENDPOINTS ===== 
-from scheduling.views import PublicBookingView, BookingProfileEventFetch
+from scheduling.views import PublicBookingView, BookingProfileEventFetch, BookEventView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,9 +34,9 @@ urlpatterns = [
     path('', include('config.routers')),
     
     # Public booking endpoint
-    path('booking/<str:username>/<slug:slug>/', PublicBookingView.as_view(), name='public-booking'),
-    path('<str:username>/', BookingProfileEventFetch.as_view(), name='public-user_events'),
-
+    path('booking/<str:username>/<slug:slug>/', PublicBookingView.as_view(), name='public-booking'), # Fetches event data
+    path('<str:username>/', BookingProfileEventFetch.as_view(), name='public-user_events'), # Fetches profile data
+    path('<str:username>/<slug:slug>/details', BookEventView.as_view(), name="book_event"),
 ]
 
 if settings.DEBUG:

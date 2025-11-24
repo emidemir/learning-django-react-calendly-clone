@@ -85,16 +85,17 @@ const TimeSelection = () => {
         setSelectedDate(dateString);
         setSelectedTime(null); // Reset time selection
         
-        // 2. Find the rule for the selected date
-        const ruleForDay = eventData.availability_rules.find(r => r.day === dateString);
+        const rulesForDay = eventData.availability_rules.filter(r => r.day === dateString);
 
-        if (ruleForDay) {
-            // 3. Generate slots based on start_time, end_time, and event duration
-            const slots = generateTimeSlots(
-                ruleForDay.start_time, 
-                ruleForDay.end_time, 
-                eventData.duration
-            );
+        if (rulesForDay.length > 0) {
+            const slots = rulesForDay.map(rule => {
+                // rule.start_time comes as "14:30:00", we usually want "14:30"
+                return rule.start_time.slice(0, 5); 
+            });
+            
+            // Optional: Sort them just to be safe
+            slots.sort();
+
             setAvailableSlotsForDay(slots);
         } else {
             setAvailableSlotsForDay([]);
@@ -108,7 +109,7 @@ const TimeSelection = () => {
     const handleNext = () => {
         if (selectedDate && selectedTime) {
             const dateTime = `${selectedDate}T${selectedTime}`; 
-            navigate(`/${username}/${eventSlug}/details?datetime=${dateTime}&tz=${timeZone}`);
+            navigate(`/${username}/${eventSlug}/details?datetime=${dateTime}&tz=${timeZone}&title=${eventData.title}&duration=${eventData.duration}`);
         }
     };
 

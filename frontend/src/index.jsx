@@ -28,7 +28,7 @@ const router = createBrowserRouter([
   // Scheduling
   {path:'/:username', element:<EventSelection/>},
   {path:'/:username/:eventSlug', element:<TimeSelection/>},
-  {path:'/username/:eventSlug/details', element:<BookingForm/>},
+  {path:'/:username/:eventSlug/details', element:<BookingForm/>},
   {path:'/success', element:<BookingConfirmation/>},
   {path:'/event/:id/reschedule', element:<EventAction/>},
   
